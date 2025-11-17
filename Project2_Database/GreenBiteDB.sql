@@ -567,15 +567,16 @@ LIMIT 5;
    - Then, group by number of guests to find the average items ordered. */
 SELECT 
     Number_of_Guests,
-    AVG(Total_Items) AS Avg_Items_Ordered
+    ROUND(AVG(Total_Items)) AS Avg_Items_Ordered
 FROM (
     SELECT 
+        T.Table_ID,
         T.Number_of_Guests,
-        OI.Order_ID,
         SUM(OI.Quantity) AS Total_Items
     FROM Table_info T
-    JOIN Order_Item OI ON T.Order_ID = OI.Order_ID
-    GROUP BY T.Table_ID
+    JOIN Order_Item OI 
+        ON T.Order_ID = OI.Order_ID
+    GROUP BY T.Table_ID, T.Number_of_Guests
 ) AS Sub
 GROUP BY Number_of_Guests
 ORDER BY Number_of_Guests;
@@ -591,4 +592,3 @@ FROM Staff S
 LEFT JOIN Order_r O ON S.Staff_ID = O.Staff_ID
 GROUP BY S.Staff_ID
 ORDER BY Total_Orders ASC;
-
